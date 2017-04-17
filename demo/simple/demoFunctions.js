@@ -6,13 +6,13 @@
 
 var client, streamClient;
 window.init = function(token) {
-  
+
   if (streamClient) {
     streamClient.close();
   }
-  
+
   client = new ApiAi.ApiAiClient({accessToken: token, streamClientClass: ApiAi.ApiAiStreamClient});
-  
+
   streamClient = client.createStreamClient();
   console.log(client.createStreamClient());
   streamClient.init();
@@ -57,6 +57,11 @@ window.init = function(token) {
 function sendText(text) {
   return client.textRequest(text);
 }
+
+function sendEvent(text) {
+  return client.eventRequest(text);
+}
+
 
 function tts(text) {
   return client.ttsRequest(text);

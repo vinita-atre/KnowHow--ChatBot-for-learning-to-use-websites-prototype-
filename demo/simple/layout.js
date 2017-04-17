@@ -2,24 +2,42 @@
   "use strict";
 
   var ENTER_KEY_CODE = 13;
-  var queryInput, resultDiv, accessTokenInput;
+  var queryInput, resultDiv;
 
   window.onload = init;
 
   function init() {
     queryInput = document.getElementById("q");
     resultDiv = document.getElementById("result");
-    accessTokenInput = document.getElementById("access_token");
-    var setAccessTokenButton = document.getElementById("set_access_token");
-
     queryInput.addEventListener("keydown", queryInputKeyDown);
-    setAccessTokenButton.addEventListener("click", setAccessToken);
+    setAccessToken();
+    welcome();
   }
 
   function setAccessToken() {
-    document.getElementById("placeholder").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
-    window.init(accessTokenInput.value);
+    window.init('cf033add73ea47d0a1e6b62eced40f71');
+  }
+
+  function welcome() {
+    var responseNode = createResponseNode();
+    sendEvent('WELCOME')
+      .then(function(response) {
+        var result,videoID;
+        try {
+          result = response.result.fulfillment.speech;
+          videoID= response.result.fulfillment.messages[1].payload.video_ID
+        } catch(error) {
+          console.log(error);;
+          result = "";
+        }
+        setResponseJSON(response);
+        setResponseOnNode(result, responseNode, videoID);
+      })
+      .catch(function(err) {
+        setResponseJSON(err);
+        setResponseOnNode("Something goes wrong", responseNode);
+      });
   }
 
   function queryInputKeyDown(event) {
@@ -65,11 +83,17 @@
     return node;
   }
 
-  function setResponseOnNode(response, node) {
+  function setResponseOnNode(response, node, videoID) {
     node.innerHTML = response ? response : "[empty response]";
     node.setAttribute('data-actual-response', response);
+    if(videoID) {
+      var videoNode = document.createElement('iframe');
+      videoNode.height=200;
+      videoNode.width=200;
+      videoNode.src='http://www.youtube.com/embed/$videoID'
+      node.appendChild(videoNode);
+    }
     var speaking = false;
-    
     function speakNode() {
       if (!response || speaking) {
         return;
