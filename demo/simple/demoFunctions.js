@@ -20,6 +20,7 @@ window.init = function(token) {
   streamClient.onInit = function() {
     console.log("> ON INIT use direct assignment property");
     streamClient.open();
+    alert("stream init");
   };
 
   streamClient.onStartListening = function() {
@@ -32,6 +33,7 @@ window.init = function(token) {
 
   streamClient.onOpen = function() {
     console.log("> ON OPEN SESSION");
+    alert("stream opened");
   };
 
   streamClient.onClose = function() {
