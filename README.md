@@ -1,3 +1,8 @@
+# KnowHow--ChatBot-for-learning-to-use-websites-prototype-
+This is a prototype design for teaching and helping older adults to use web applications. We use an ML powered agent to understand user queries. The javascript client is used to integrate the agent and give us a bot for our prototype. In addition to the bot , we also show visual markers for highlighting the UI elements on the application screen. We have used the Google Drive as application for our prototype.
+This project has been forked from apiai-javascriptclient-demo project
+
+
 **This is the V2 version of api.ai JS SDK. If you are looking for old one, please visit 'v1-deprecated' branch**
 
 # Installation
@@ -161,3 +166,6 @@ You can find full list of interfaces [here](ts/Interfaces.ts)
 
 ### Non-breaking changes:
 * Demo updated
+
+ 
+
