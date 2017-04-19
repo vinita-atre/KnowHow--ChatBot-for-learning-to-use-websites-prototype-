@@ -2,7 +2,7 @@
   "use strict";
 
   var ENTER_KEY_CODE = 13;
-  var queryInput, resultDiv, sidebarDiv, applicationImage;
+  var queryInput, resultDiv, sidebarDiv, applicationImage,isMute, muteButton;
   var arrImageURL = new Array();
 
   window.onload = init;
@@ -12,10 +12,30 @@
     resultDiv = document.getElementById("result");
     sidebarDiv = document.getElementById("sidebarContainer");
     applicationImage = document.getElementById("applicationImage");
+    muteButton = document.getElementById("un-mute");
+    muteButton.addEventListener("click",onChangeHandler);
+    muteButton.dataset.condition = "mute";
+
     applicationImage.addEventListener("click",clickEvent);
     queryInput.addEventListener("keydown", queryInputKeyDown);
     setAccessToken();
     welcome();
+  }
+  function onChangeHandler(){
+ //  alert("clicked");
+   // alert(this);
+    //alert(muteButton.value);
+    if(muteButton.dataset.condition == "mute"){
+      alert("Speech Muted");
+      isMute = "true";
+      muteButton.dataset.condition = "un-mute"
+      muteButton.name = "Unmute"
+      }
+      else{
+        alert("Speech un-muted");
+        isMute = "false";
+        muteButton.dataset.condition = "mute"
+      }
   }
   function clickEvent(){
     
@@ -42,10 +62,10 @@
   function welcome() {
     var responseNode = createResponseNode();
     sendEvent('WELCOME')
-      .then(function(response) {
-        var result,videoID;
-        var imageURL = new Array ();
-        try {
+    .then(function(response) {
+      var result,videoID;
+      var imageURL = new Array ();
+      try {
           //alert(JSON.stringify(response, null, 2));
           result = response.result.fulfillment.speech;
           videoID= response.result.fulfillment.messages[1].payload.video_ID;
@@ -54,17 +74,17 @@
           applicationImage.dataset.originalSrc = imageURL[0];
           //arrImageURL.push(response.result.fulfillment.messages[2].imageUrl);
          // alert(response.result.fulfillment.messages[2].imageUrl);
-        } catch(error) {
-          console.log(error);;
-          result = "";
-        }
-        setResponseJSON(response);
-        setResponseOnNode(result, responseNode, videoID, imageURL);
-      })
-      .catch(function(err) {
-        setResponseJSON(err);
-        setResponseOnNode("Something goes wrong", responseNode);
-      });
+       } catch(error) {
+        console.log(error);;
+        result = "";
+      }
+      setResponseJSON(response);
+      setResponseOnNode(result, responseNode, videoID, imageURL);
+    })
+    .catch(function(err) {
+      setResponseJSON(err);
+      setResponseOnNode("Something goes wrong", responseNode);
+    });
   }
 
   function queryInputKeyDown(event) {
@@ -79,46 +99,46 @@
     var responseNode = createResponseNode();
 
     sendText(value)
-      .then(function(response) {
-        var result;
-        var imageURL = new Array();
-        try {
+    .then(function(response) {
+      var result;
+      var imageURL = new Array();
+      try {
           //alert(JSON.stringify(response, null, 2));
           result = response.result.fulfillment.speech;
          // alert(result);
-          
-          if (response.result.fulfillment.messages){
+         
+         if (response.result.fulfillment.messages){
 
             //for (image in response.result.fulfillment.messages){
               //imageURL.push(image.imageUrl)
-            imageURL.push(response.result.fulfillment.messages[1].imageUrl)
-            imageURL.push(response.result.fulfillment.messages[2].imageUrl)
-            imageURL.push(response.result.fulfillment.messages[3].imageUrl)
-            imageURL.push(response.result.fulfillment.messages[4].imageUrl)
-            imageURL.push(response.result.fulfillment.messages[5].imageUrl)
+              imageURL.push(response.result.fulfillment.messages[1].imageUrl)
+              imageURL.push(response.result.fulfillment.messages[2].imageUrl)
+              imageURL.push(response.result.fulfillment.messages[3].imageUrl)
+              imageURL.push(response.result.fulfillment.messages[4].imageUrl)
+              imageURL.push(response.result.fulfillment.messages[5].imageUrl)
             //}
           // alert(imageURL);
-         }
+        }
 
-        } catch(error) {
-          result = "";
-        }
-        setResponseJSON(response);
-        if (imageURL.length > 0){
+      } catch(error) {
+        result = "";
+      }
+      setResponseJSON(response);
+      if (imageURL.length > 0){
         setResponseOnNode(result, responseNode,null, imageURL);
-        }else{
-          setResponseOnNode(result, responseNode);
-        }
-      })
-      .catch(function(err) {
-        setResponseJSON(err);
-        setResponseOnNode("Something goes wrong", responseNode);
-      });
+      }else{
+        setResponseOnNode(result, responseNode);
+      }
+    })
+    .catch(function(err) {
+      setResponseJSON(err);
+      setResponseOnNode("Something goes wrong", responseNode);
+    });
   }
 
   function createQueryNode(query) {
     var node = document.createElement('div');
-  
+    
 
     node.className = "clearfix left-align left card-panel green accent-1";
     node.innerHTML = query;
@@ -139,55 +159,57 @@
 
   }
 
-function scrollToBottom(id){
+  function scrollToBottom(id){
    var div = document.getElementById(id);
    div.scrollTop = div.scrollHeight - div.clientHeight;
-}
-  function setResponseOnNode(response, node, videoID,imageURL) {
-    node.innerHTML = response ? response : "[empty response]";
-    node.setAttribute('data-actual-response', response);
-    if(videoID) {
-     
-      var videoNode = document.createElement('iframe');
-      videoNode.height=300;
-      videoNode.width=300;
-      videoNode.allowFullScreen="true";
-      videoNode.allowfullscreen="true";
-      videoNode.allowFullScreen="allowFullScreen";
-      videoNode.allowfullscreen="allowfullscreen";
-      videoNode.frameBorder=0;
-      videoNode.src='http://www.youtube.com/embed/'+videoID;
-      node.appendChild(videoNode);
-    }
-    if(imageURL){
+ }
+ function setResponseOnNode(response, node, videoID,imageURL) {
+  node.innerHTML = response ? response : "[empty response]";
+  node.setAttribute('data-actual-response', response);
+  if(videoID) {
+   
+    var videoNode = document.createElement('iframe');
+    videoNode.height=300;
+    videoNode.width=300;
+    videoNode.allowFullScreen="true";
+    videoNode.allowfullscreen="true";
+    videoNode.allowFullScreen="allowFullScreen";
+    videoNode.allowfullscreen="allowfullscreen";
+    videoNode.frameBorder=0;
+    videoNode.src='http://www.youtube.com/embed/'+videoID;
+    node.appendChild(videoNode);
+  }
+  if(imageURL){
 
-      applicationImage.src = imageURL[0]
-      applicationImage.dataset.firstSrc = imageURL[0];
-      applicationImage.dataset.secondSrc = imageURL[1];
-      applicationImage.dataset.thirdSrc = imageURL[2];
-      applicationImage.dataset.fourthSrc = imageURL[3];
-      applicationImage.dataset.fifthSrc = imageURL[4];
+    applicationImage.src = imageURL[0]
+    applicationImage.dataset.firstSrc = imageURL[0];
+    applicationImage.dataset.secondSrc = imageURL[1];
+    applicationImage.dataset.thirdSrc = imageURL[2];
+    applicationImage.dataset.fourthSrc = imageURL[3];
+    applicationImage.dataset.fifthSrc = imageURL[4];
 
+  }
+  var speaking = false;
+  function speakNode() {
+    if (!response || speaking) {
+      return;
     }
-    var speaking = false;
-    function speakNode() {
-      if (!response || speaking) {
-        return;
-      }
-      speaking = true;
-      tts(response)
-        .then(function () {speaking = false})
-        .catch(function (err) {
-          speaking = false;
-          Materialize.toast(err, 2000, 'red lighten-1');
-        });
-    }
-
-    node.addEventListener("click", speakNode);
-    speakNode();
+    speaking = true;
+    tts(response)
+    .then(function () {speaking = false})
+    .catch(function (err) {
+      speaking = false;
+      Materialize.toast(err, 2000, 'red lighten-1');
+    });
   }
 
-  function setResponseJSON(response) {
+  node.addEventListener("click", speakNode);
+  if(!isMute){
+  speakNode();
+}
+}
+
+function setResponseJSON(response) {
     //var node = document.getElementById("jsonResponse");
     //node.innerHTML = JSON.stringify(response, null, 2);
   }

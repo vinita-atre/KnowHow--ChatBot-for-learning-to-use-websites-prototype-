@@ -66,7 +66,9 @@ function sendEvent(text) {
 
 
 function tts(text) {
+	
   return client.ttsRequest(text);
+
 }
 
 function startMic() {
