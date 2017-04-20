@@ -30,29 +30,29 @@
       isMute = "true";
       muteButton.dataset.condition = "un-mute"
       muteButton.name = "Unmute"
-      }
-      else{
-        alert("Speech un-muted");
-        isMute = "false";
-        muteButton.dataset.condition = "mute"
-      }
+    }
+    else{
+      alert("Speech un-muted");
+      isMute = "false";
+      muteButton.dataset.condition = "mute"
+    }
   }
   function clickEvent(){
     window.open("indexDoc.html");
-    if (applicationImage.src == applicationImage.dataset.secondSrc){
-      applicationImage.src = applicationImage.dataset.thirdSrc;
-      //
-    }else if (applicationImage.src == applicationImage.dataset.thirdSrc){
-      applicationImage.src = applicationImage.dataset.originalSrc;
-      alert("Did you get it? You can ask me again if you like");
+    // if (applicationImage.src == applicationImage.dataset.secondSrc){
+    //   applicationImage.src = applicationImage.dataset.thirdSrc;
+    //   //
+    // }else if (applicationImage.src == applicationImage.dataset.thirdSrc){
+    //   applicationImage.src = applicationImage.dataset.originalSrc;
+    //   alert("Did you get it? You can ask me again if you like");
 
-    }else if (applicationImage.src == applicationImage.dataset.originalSrc){
-      applicationImage.src = applicationImage.dataset.fourthSrc;
-    }else if (applicationImage.src == applicationImage.dataset.fourthSrc){
-      applicationImage.src = applicationImage.dataset.fifthSrc;
-    }else if (applicationImage.src == applicationImage.dataset.firstSrc){
-      applicationImage.src = applicationImage.dataset.secondSrc;
-    }
+    // }else if (applicationImage.src == applicationImage.dataset.originalSrc){
+    //   applicationImage.src = applicationImage.dataset.fourthSrc;
+    // }else if (applicationImage.src == applicationImage.dataset.fourthSrc){
+    //   applicationImage.src = applicationImage.dataset.fifthSrc;
+    // }else if (applicationImage.src == applicationImage.dataset.firstSrc){
+    //   applicationImage.src = applicationImage.dataset.secondSrc;
+    // }
   }
   function setAccessToken() {
     document.getElementById("main-wrapper").style.display = "block";
@@ -108,15 +108,15 @@
          // alert(result);
          
          if (response.result.fulfillment.messages){
+          var arrMessages = response.result.fulfillment.messages
+          
+          for (var i = 0; i < arrMessages.length; i++){
+            if (arrMessages[i].type == "3"){
 
-            //for (image in response.result.fulfillment.messages){
-              //imageURL.push(image.imageUrl)
-              imageURL.push(response.result.fulfillment.messages[1].imageUrl)
-              imageURL.push(response.result.fulfillment.messages[2].imageUrl)
-              imageURL.push(response.result.fulfillment.messages[3].imageUrl)
-              imageURL.push(response.result.fulfillment.messages[4].imageUrl)
-              imageURL.push(response.result.fulfillment.messages[5].imageUrl)
-            //}
+            imageURL.push(arrMessages[i].imageUrl)
+            //alert("pushing "+i+" imageURL" + imageURL);
+          }
+          }
           // alert(imageURL);
         }
 
@@ -163,30 +163,56 @@
    var div = document.getElementById(id);
    div.scrollTop = div.scrollHeight - div.clientHeight;
  }
- function setResponseOnNode(response, node, videoID,imageURL) {
-  node.innerHTML = response ? response : "[empty response]";
-  node.setAttribute('data-actual-response', response);
-  if(videoID) {
-   
-    var videoNode = document.createElement('iframe');
-    videoNode.height=300;
-    videoNode.width=300;
-    videoNode.allowFullScreen="true";
-    videoNode.allowfullscreen="true";
-    videoNode.allowFullScreen="allowFullScreen";
-    videoNode.allowfullscreen="allowfullscreen";
-    videoNode.frameBorder=0;
-    videoNode.src='http://www.youtube.com/embed/'+videoID;
-    node.appendChild(videoNode);
-  }
-  if(imageURL){
+ function startTimer(imageURL){
+   alert("setInterval");
 
-    applicationImage.src = imageURL[0]
-    applicationImage.dataset.firstSrc = imageURL[0];
-    applicationImage.dataset.secondSrc = imageURL[1];
-    applicationImage.dataset.thirdSrc = imageURL[2];
-    applicationImage.dataset.fourthSrc = imageURL[3];
-    applicationImage.dataset.fifthSrc = imageURL[4];
+    // for (var i=1; i<imageURL.length; i++){
+    //   alert("in for");
+    var i = 1;
+    var changeImage = setInterval(function(){
+
+      // displayNextImage(imageURL,i);
+      if (i == (imageURL.length)){
+        applicationImage.src = applicationImage.dataset.originalSrc;
+        clearInterval();
+      }else{
+        alert("displayNextImage:"+i);
+        alert(imageURL[i]);
+
+
+        applicationImage.src = imageURL[i];
+        i++;
+      }
+
+
+    },3000);
+
+     //}
+   }
+
+  function setResponseOnNode(response, node, videoID,imageURL) {
+    node.innerHTML = response ? response : "[empty response]";
+    node.setAttribute('data-actual-response', response);
+    if(videoID) {
+
+      var videoNode = document.createElement('iframe');
+      videoNode.height=300;
+      videoNode.width=300;
+      videoNode.allowFullScreen="true";
+      videoNode.allowfullscreen="true";
+      videoNode.allowFullScreen="allowFullScreen";
+      videoNode.allowfullscreen="allowfullscreen";
+      videoNode.frameBorder=0;
+      videoNode.src='http://www.youtube.com/embed/'+videoID;
+      node.appendChild(videoNode);
+    }
+    if(imageURL){
+
+      applicationImage.src = imageURL[0]
+      if(imageURL.length>1){
+        startTimer(imageURL);
+      }
+  
 
   }
   var speaking = false;
@@ -205,8 +231,8 @@
 
   node.addEventListener("click", speakNode);
   if(!isMute){
-  speakNode();
-}
+    speakNode();
+  }
 }
 
 function setResponseJSON(response) {
