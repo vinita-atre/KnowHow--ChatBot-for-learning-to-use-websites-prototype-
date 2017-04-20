@@ -38,7 +38,7 @@
       }
   }
   function clickEvent(){
-    
+    window.open("indexDoc.html");
     if (applicationImage.src == applicationImage.dataset.secondSrc){
       applicationImage.src = applicationImage.dataset.thirdSrc;
       //
