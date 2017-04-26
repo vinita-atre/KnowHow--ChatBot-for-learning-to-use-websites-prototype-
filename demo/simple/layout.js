@@ -15,11 +15,17 @@
     muteButton = document.getElementById("un-mute");
     muteButton.addEventListener("click",onChangeHandler);
     muteButton.dataset.condition = "mute";
-
+    if(applicationImage){
     applicationImage.addEventListener("click",clickEvent);
+  }
     queryInput.addEventListener("keydown", queryInputKeyDown);
     setAccessToken();
-    welcome();
+      if (applicationImage){
+    welcome("WELCOME");
+      }
+      else{
+          welcome("WELCOMEDOCS");
+      }
   }
   function onChangeHandler(){
  //  alert("clicked");
@@ -59,9 +65,9 @@
     window.init('cf033add73ea47d0a1e6b62eced40f71');
   }
 
-  function welcome() {
+  function welcome(eventName) {
     var responseNode = createResponseNode();
-    sendEvent('WELCOME')
+    sendEvent(eventName)
     .then(function(response) {
       var result,videoID;
       var imageURL = new Array ();
@@ -70,8 +76,11 @@
           result = response.result.fulfillment.speech;
           videoID= response.result.fulfillment.messages[1].payload.video_ID;
           //alert(result);
+          if(applicationImage){
           imageURL.push(response.result.fulfillment.messages[2].imageUrl)
+          
           applicationImage.dataset.originalSrc = imageURL[0];
+        }
           //arrImageURL.push(response.result.fulfillment.messages[2].imageUrl);
          // alert(response.result.fulfillment.messages[2].imageUrl);
        } catch(error) {
@@ -79,11 +88,16 @@
         result = "";
       }
       setResponseJSON(response);
+        if(applicationImage){
       setResponseOnNode(result, responseNode, videoID, imageURL);
+        }else{
+            setResponseOnNode(result, responseNode, videoID);
+        }
     })
     .catch(function(err) {
       setResponseJSON(err);
       setResponseOnNode("Something goes wrong", responseNode);
+        console.log(err);
     });
   }
 

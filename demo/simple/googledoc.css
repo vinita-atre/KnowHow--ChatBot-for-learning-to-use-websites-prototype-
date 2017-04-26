@@ -1,0 +1,81 @@
+form {
+margin-left:55px;
+}
+
+input[type="text"]
+{
+    font-size:18px;
+}
+.navbar {
+    padding-top: 10px;
+    overflow: hidden;
+    background-color: #ffffff;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    -moz-box-shadow:    1px 1px 1px 1px #D3D3D3;
+    -webkit-box-shadow: 1px 1px 1px 1px #D3D3D3;
+    box-shadow:         1px 1px 1px 1px #D3D3D3;
+    display: inline-block;
+}
+
+#container{ 
+background: #E8E8E8;
+    padding-top: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
+    height: 100vh;
+
+}
+p{
+    font-family: "arial", "san-serif";
+    font-size: 12px;
+    color: #A0A0A0;
+    display: inline-block;
+    padding-left: 40px;
+    margin-top: 2px;
+
+}
+
+textarea {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #ffffff;
+    margin-top:150px;
+    height: 70vh;
+    -moz-box-shadow:    1px 1px 1px 1px #D3D3D3;
+    -webkit-box-shadow: 1px 1px 1px 1px #D3D3D3;
+    box-shadow:         1px 1px 1px 1px #D3D3D3;
+    outline: none;
+    font-family:"arial";
+    padding-left:0px;
+    padding-right:0px;
+    padding-bottom: 0px;
+    font-size: 12px; 
+    
+    background-color: white;
+
+}
+.selector.noshadow {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+    float:left;
+	}
+img{
+    float: left;
+}
+
+.share{
+    float:right;
+    margin-right: 40px;
+    margin-top: -5px;
+}
+
+.file{
+    width: 450px;
+    float:left;
+    display: inline-block;
+}
+
