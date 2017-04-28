@@ -15,17 +15,22 @@
     muteButton = document.getElementById("un-mute");
     muteButton.addEventListener("click",onChangeHandler);
     muteButton.dataset.condition = "mute";
-  
+    if(applicationImage){
     applicationImage.addEventListener("click",clickEvent);
-  
+  }
     queryInput.addEventListener("keydown", queryInputKeyDown);
     setAccessToken();
-     
+      if (applicationImage){
     welcome("WELCOME");
-      
+      }
+      else{
+          welcome("WELCOMEDOCS");
+      }
   }
   function onChangeHandler(){
- 
+ //  alert("clicked");
+   // alert(this);
+    //alert(muteButton.value);
     if(muteButton.dataset.condition == "mute"){
       alert("Speech Muted");
       isMute = "true";
@@ -39,13 +44,10 @@
     }
   }
   function clickEvent(){
-  
-    if (applicationImage.src == applicationImage.dataset.originalSrc){
-      applicationImage.src = applicationImage.dataset.firstSrc;
-    }else if (applicationImage.src == applicationImage.dataset.firstSrc){
-      applicationImage.src = applicationImage.dataset.originalSrc;
-        window.open("indexDoc.html");
-    }
+    window.open("indexDoc.html");
+    // if (applicationImage.src == applicationImage.dataset.secondSrc){
+    //   applicationImage.src = applicationImage.dataset.thirdSrc;
+    //   //
     // }else if (applicationImage.src == applicationImage.dataset.thirdSrc){
     //   applicationImage.src = applicationImage.dataset.originalSrc;
     //   alert("Did you get it? You can ask me again if you like");
@@ -73,24 +75,12 @@
           //alert(JSON.stringify(response, null, 2));
           result = response.result.fulfillment.speech;
           videoID= response.result.fulfillment.messages[1].payload.video_ID;
-          
-               if (response.result.fulfillment.messages){
-          var arrMessages = response.result.fulfillment.messages
-          
-          for (var i = 0; i < arrMessages.length; i++){
-            if (arrMessages[i].type == "3"){
-
-            imageURL.push(arrMessages[i].imageUrl)
-            //alert("pushing "+i+" imageURL" + imageURL);
-          }
-          }
-          // alert(imageURL);
-        }
-         // imageURL.push(response.result.fulfillment.messages[2].imageUrl)
+          //alert(result);
+          if(applicationImage){
+          imageURL.push(response.result.fulfillment.messages[2].imageUrl)
           
           applicationImage.dataset.originalSrc = imageURL[0];
-          applicationImage.dataset.firstSrc = imageURL[1];
-        
+        }
           //arrImageURL.push(response.result.fulfillment.messages[2].imageUrl);
          // alert(response.result.fulfillment.messages[2].imageUrl);
        } catch(error) {
@@ -98,9 +88,11 @@
         result = "";
       }
       setResponseJSON(response);
-      
-      setResponseOnNode(result, responseNode, videoID, imageURL,false);
-        
+        if(applicationImage){
+      setResponseOnNode(result, responseNode, videoID, imageURL);
+        }else{
+            setResponseOnNode(result, responseNode, videoID);
+        }
     })
     .catch(function(err) {
       setResponseJSON(err);
@@ -147,7 +139,7 @@
       }
       setResponseJSON(response);
       if (imageURL.length > 0){
-        setResponseOnNode(result, responseNode,null, imageURL,true);
+        setResponseOnNode(result, responseNode,null, imageURL);
       }else{
         setResponseOnNode(result, responseNode);
       }
@@ -186,7 +178,7 @@
    div.scrollTop = div.scrollHeight - div.clientHeight;
  }
  function startTimer(imageURL){
-   //alert("setInterval");
+   alert("setInterval");
 
     // for (var i=1; i<imageURL.length; i++){
     //   alert("in for");
@@ -198,8 +190,8 @@
         applicationImage.src = applicationImage.dataset.originalSrc;
         clearInterval();
       }else{
-      //  alert("displayNextImage:"+i);
-      //  alert(imageURL[i]);
+        alert("displayNextImage:"+i);
+        alert(imageURL[i]);
 
 
         applicationImage.src = imageURL[i];
@@ -212,7 +204,7 @@
      //}
    }
 
-  function setResponseOnNode(response, node, videoID,imageURL,isAnimated) {
+  function setResponseOnNode(response, node, videoID,imageURL) {
     node.innerHTML = response ? response : "[empty response]";
     node.setAttribute('data-actual-response', response);
     if(videoID) {
@@ -232,9 +224,7 @@
 
       applicationImage.src = imageURL[0]
       if(imageURL.length>1){
-        if (isAnimated){
         startTimer(imageURL);
-      }
       }
   
 
