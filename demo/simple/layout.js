@@ -190,6 +190,7 @@
 
     // for (var i=1; i<imageURL.length; i++){
     //   alert("in for");
+    console.log(imageURL);
     var i = 1;
     var changeImage = setInterval(function(){
 
@@ -197,10 +198,11 @@
       if (i == (imageURL.length)){
         applicationImage.src = applicationImage.dataset.originalSrc;
         clearInterval();
+        console.log("the exit" + imageURL.length +i);
       }else{
       //  alert("displayNextImage:"+i);
       //  alert(imageURL[i]);
-
+console.log(i);
 
         applicationImage.src = imageURL[i];
         i++;
