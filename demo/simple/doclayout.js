@@ -2,7 +2,7 @@
   "use strict";
 
   var ENTER_KEY_CODE = 13;
-  var queryInput, resultDiv, sidebarDiv, isMute, muteButton;
+  var queryInput, resultDiv, sidebarDiv, isMute, muteButton, applicationImageContainer, applicationImage;
   //var applicationImage;
   var arrImageURL = new Array();
 
@@ -12,12 +12,14 @@
     queryInput = document.getElementById("q");
     resultDiv = document.getElementById("result");
     sidebarDiv = document.getElementById("sidebarContainer");
-   // applicationImage = document.getElementById("applicationImage");
+    applicationImageContainer = document.getElementById("applicationImageContainer");
+    applicationImage = document.getElementById("applicationImage");
     muteButton = document.getElementById("un-mute");
     muteButton.addEventListener("click",onChangeHandler);
     muteButton.dataset.condition = "mute";
+
   //   if(applicationImage){
-  //   applicationImage.addEventListener("click",clickEvent);
+     applicationImageContainer.addEventListener("click",clickEvent);
   // }
     queryInput.addEventListener("keydown", queryInputKeyDown);
     setAccessToken();
@@ -42,21 +44,8 @@
     }
   }
   function clickEvent(){
-    window.open("indexDoc.html");
-    // if (applicationImage.src == applicationImage.dataset.secondSrc){
-    //   applicationImage.src = applicationImage.dataset.thirdSrc;
-    //   //
-    // }else if (applicationImage.src == applicationImage.dataset.thirdSrc){
-    //   applicationImage.src = applicationImage.dataset.originalSrc;
-    //   alert("Did you get it? You can ask me again if you like");
-
-    // }else if (applicationImage.src == applicationImage.dataset.originalSrc){
-    //   applicationImage.src = applicationImage.dataset.fourthSrc;
-    // }else if (applicationImage.src == applicationImage.dataset.fourthSrc){
-    //   applicationImage.src = applicationImage.dataset.fifthSrc;
-    // }else if (applicationImage.src == applicationImage.dataset.firstSrc){
-    //   applicationImage.src = applicationImage.dataset.secondSrc;
-    // }
+   // alert("clicked");
+  
   }
   function setAccessToken() {
     document.getElementById("main-wrapper").style.display = "block";
@@ -140,22 +129,25 @@
             //alert("pushing "+i+" imageURL" + imageURL);
           }
           }
-          // alert(imageURL);
+           //alert(imageURL);
         }
 
       } catch(error) {
         result = "";
+        //alert(error);
       }
       setResponseJSON(response);
       if (imageURL.length > 0){
+          
         setResponseOnNode(result, responseNode,null, imageURL, true);
+      
       }else{
         setResponseOnNode(result, responseNode);
       }
     })
     .catch(function(err) {
       setResponseJSON(err);
-      alert(err);
+      //alert(err);
       setResponseOnNode("Something goes wrong", responseNode);
     });
   }
@@ -188,28 +180,31 @@
    div.scrollTop = div.scrollHeight - div.clientHeight;
  }
  function startTimer(imageURL){
-   alert("setInterval");
-
-    // for (var i=1; i<imageURL.length; i++){
-    //   alert("in for");
+ 
+    console.log("start timer");
     var i = 1;
+    console.log("i:"+ i)
     var changeImage = setInterval(function(){
 
-      // displayNextImage(imageURL,i);
-      if (i == (imageURL.length)){
-        applicationImage.src = applicationImage.dataset.originalSrc;
-        clearInterval();
+      
+      if (i == (imageURL.length + 1 )){
+        console.log("index is:"+imageURL.length+",i"+i);
+       
+        applicationImage.style.display = "none";
+        applicationCode.style.display = "block"
+        clearInterval(changeImage);
       }else{
-        alert("displayNextImage:"+i);
-        alert(imageURL[i]);
+        //alert("displayNextImage:"+i);
+        //alert(imageURL[i]);
 
-
-        applicationImage.src = imageURL[i];
+ //var applicationImage = document.getElementById("applicationImage");
+      // applicationImage.src = imageURL[i];
+        applicationImage.style.backgroundImage = "url("+imageURL[i]+")";
         i++;
       }
 
 
-    },3000);
+    },2000);
 
      //}
    }
@@ -231,10 +226,25 @@
       node.appendChild(videoNode);
     }
     if(imageURL){
+      // var applicationImage = document.createElement('img');
+      // applicationImage.style.width = applicationImageContainer.style.width;
+      //  applicationImage.style.height = applicationImageContainer.style.height;
+      // applicationImageContainer.appendChild(applicationImage);
 
-      applicationImage.src = imageURL[0]
+//alert("here");
+      applicationImage.src = imageURL[0];
+     // alert(imageURL[0]);
+      applicationImage.style.display = "block";
+      applicationCode.style.display ="none";
+      //var image = document.createElement("img");
+
+      applicationImage.style.backgroundImage = "url("+imageURL[0]+")";//imageURL[0];
+       // applicationImage.src = imageURL[0];
+      //console.log(applicationImage.style);
+     // applicationImage.style.height = 100vh;
       if(imageURL.length>1){
         if(isAnimated){
+
         startTimer(imageURL);
       }
     }
